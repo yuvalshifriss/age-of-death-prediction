@@ -32,7 +32,7 @@ Input file: data/heart_failure_clinical_records.csv
 Download from: [Kaggle – Heart Failure Clinical Records](https://www.kaggle.com/datasets/aadarshvelu/heart-failure-prediction-clinical-records)
 It contains clinical features of patients, with DEATH_EVENT = 1 indicating
 the patient died during follow-up and age at death. The time column represents the duration (in days) until the follow-up, with a maximum value of 285 days.
-Given this, we assume that for patients with DEATH_EVENT = 1, the age column reflects their age at death.
+Given this, we assume that for patients with DEATH_EVENT = 1, the age column reflects their age at death. There are about 1500 such patients, on which the differet models train, which is clearly not a lot.
 
 
 # 🚀 Scripts Overview
