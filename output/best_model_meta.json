@@ -1,5 +1,5 @@
 {
-  "model_name": "XGBoost",
+  "model_name": "Random Forest",
   "metric": "mse",
   "score": 18.072699692652343,
   "features": [

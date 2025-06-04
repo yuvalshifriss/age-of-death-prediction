@@ -6,7 +6,7 @@ This project predicts the **age of death** for patients who experienced **heart 
 
 ## 📁 Project Structure
 ```
-death_age_predictor/
+death-age-predictor/
 ├── data/
 │   └── heart_failure_clinical_records.csv
 ├── output/
@@ -31,7 +31,9 @@ pip install -r requirements.txt
 Input file: data/heart_failure_clinical_records.csv
 Download from: [Kaggle – Heart Failure Clinical Records](https://www.kaggle.com/datasets/aadarshvelu/heart-failure-prediction-clinical-records)
 It contains clinical features of patients, with DEATH_EVENT = 1 indicating
-the patient died during follow-up and age at death.
+the patient died during follow-up and age at death. The time column represents the duration (in days) until the follow-up, with a maximum value of 285 days.
+Given this, we assume that for patients with DEATH_EVENT = 1, the age column reflects their age at death.
+
 
 # 🚀 Scripts Overview
 ## 1. `explore_data_app.py`
@@ -114,7 +116,7 @@ This project includes several strategies to detect and reduce overfitting:
 ### 📉 Learning Curve Plots
 - Learning curves compare training and validation errors across increasing dataset sizes.
 - In this project, validation error is typically ~15% higher than training error.
-- This gap suggests **moderate overfitting**, but within an acceptable range.
+- This gap suggests **moderate overfitting**, understandable given the small amount of samples ~1500, but within an acceptable range.
 
 ### 📊 Feature Importance Visualization
 - Tree-based models (e.g. Random Forest, XGBoost) provide interpretable feature importances.

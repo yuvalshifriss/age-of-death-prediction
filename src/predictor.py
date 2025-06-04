@@ -7,12 +7,13 @@ from time import time
 
 
 def load_data_for_prediction():
+    # TODO: use the same function to load the data in all scripts
     file_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir, 'data', 'heart_failure_clinical_records.csv'))
     df = pd.read_csv(file_path)
-
-    X = df.drop(columns=['DEATH_EVENT', 'time'], errors='ignore')
-    death_event = df['DEATH_EVENT']
-    true_age = df['age'].where(death_event == 1, other=None)
+    dead_df = df[df['DEATH_EVENT'] == 1]
+    X = dead_df.drop(columns=['DEATH_EVENT', 'time'], errors='ignore')
+    death_event = dead_df['DEATH_EVENT']
+    true_age = dead_df['age'].where(death_event == 1, other=None)
 
     return X.reset_index(drop=True), true_age.reset_index(drop=True), death_event.reset_index(drop=True)
 

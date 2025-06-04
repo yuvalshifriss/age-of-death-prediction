@@ -50,7 +50,7 @@ def define_models():
 def evaluate_model(model, X_train, X_test, y_train, y_test):
     pipeline = make_pipeline(StandardScaler(), model)
     start = time()
-    pipeline.fit(X_train, y_train)
+    pipeline.fit(X_train, y_train)  # scaling / normalization is done inside
     duration = time() - start
     y_pred = pipeline.predict(X_test)
     return {
@@ -151,21 +151,21 @@ def run_full_pipeline(metric_to_optimize="mse"):
 
     print("🔧 Defining models...")
     models = define_models()
-    seed_results = {name: [] for name in models}
+    seed_results = {}
 
-    print("🚀 Running evaluations across seeds:", SEEDS)
-    for seed in SEEDS:
-        print(f"\n🔁 Seed: {seed}")
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=seed)
-        for name, model in models.items():
-            print(f"   ▶ Training {name}...")
+    print("🚀 Running evaluations grouped by model...")
+    for name, model in models.items():
+        print(f"\n📌 Results for {name}:")
+        seed_results[name] = []
+        for i, seed in enumerate(SEEDS):
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=seed)
             res = evaluate_model(model, X_train, X_test, y_train, y_test)
             res["name"] = name
-            res["y_test"] = y_test  # Needed for plotting
+            res["y_test"] = y_test
             seed_results[name].append(res)
-            print(f"     MSE: {res['mse']:.4f}, MAE: {res['mae']:.4f}, R²: {res['r2']:.4f}")
+            print(f"   Seed {seed} ▶ MSE: {res['mse']:.4f}, MAE: {res['mae']:.4f}, R²: {res['r2']:.4f}")
 
-    print("\n📊 Aggregating results across seeds...")
+    print("\n📊 Aggregating average results across seeds...")
     summary = []
     for name, runs in seed_results.items():
         metric_vals = [r[metric_to_optimize] for r in runs]
@@ -173,7 +173,7 @@ def run_full_pipeline(metric_to_optimize="mse"):
         summary.append({
             "name": name,
             "metric_value": avg_metric,
-            "result": runs[0]  # Just pick first pipeline for saving
+            "result": runs[0]  # take first run's pipeline for saving
         })
 
     results_sorted = sorted(summary, key=lambda x: x["metric_value"])
@@ -182,10 +182,7 @@ def run_full_pipeline(metric_to_optimize="mse"):
 
     print(f"\n🎯 Best model by {metric_to_optimize.upper()}: {best_name} ({results_sorted[0]['metric_value']:.4f} {metric_to_optimize.upper()})")
 
-    # Save model
     joblib.dump(best_result['pipeline'], os.path.join(OUTPUT_DIR, 'best_model.joblib'))
-
-    # Save metadata INCLUDING features used during training
     with open(os.path.join(OUTPUT_DIR, 'best_model_meta.json'), 'w') as f:
         json.dump({
             "model_name": best_name,
@@ -196,7 +193,6 @@ def run_full_pipeline(metric_to_optimize="mse"):
 
     print(f"💾 Model + metadata saved to: {OUTPUT_DIR}")
 
-    # Visualizations
     _ = plot_learning_curve(best_result['pipeline'], X, y, best_name)
     _ = plot_predictions([r["result"] for r in results_sorted], best_result['y_test'], metric_to_optimize, OUTPUT_DIR)
     _ = plot_feature_importance(best_result, feature_names, best_name, OUTPUT_DIR)
