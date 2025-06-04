@@ -45,7 +45,9 @@ An interactive **Streamlit** web app for exploring the clinical data of deceased
 - Correlation heatmap of numeric features
 
 ### ▶️ How to Launch
-`python src/run_data_exploration_app.py` <br>
+```bash
+python src/train_and_test.py
+```
 or
 ```bash
 streamlit run src/explore_data_app.py
