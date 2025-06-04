@@ -1,4 +1,4 @@
-# 💓 Age of Death Predictor
+# 💀 Age of Death Predictor
 
 This project predicts the **age of death** for patients who experienced **heart failure**, using clinical features and various regression models. It includes data exploration, training, evaluation, and prediction capabilities with visualizations.
 
