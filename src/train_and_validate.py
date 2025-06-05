@@ -37,31 +37,24 @@ def load_and_split_data() -> Tuple[pd.DataFrame, pd.Series]:
 
 def define_models() -> Dict[str, RegressorMixin]:
     return {
-        "Linear Regression": LinearRegression(),
-        "Ridge Regression": Ridge(alpha=1.0),
-        "Lasso Regression": Lasso(alpha=0.1),
-        "ElasticNet Regression": ElasticNet(alpha=0.1, l1_ratio=0.5),
-        "Decision Tree": DecisionTreeRegressor(random_state=42),
         "Random Forest": RandomForestRegressor(random_state=42),
-        "SVR": SVR(kernel='rbf', C=1.0, epsilon=0.1),
-        "Gradient Boosting": GradientBoostingRegressor(random_state=42),
         "XGBoost": xgb.XGBRegressor(objective='reg:squarederror', random_state=42),
-        "KNN": KNeighborsRegressor(n_neighbors=5)
+        "ElasticNet Regression": ElasticNet(alpha=0.1, l1_ratio=0.5)
     }
 
 
-def evaluate_model(model: RegressorMixin, X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.DataFrame,
-                   y_test: pd.DataFrame) -> Dict[str, Any]:
+def evaluate_model(model: RegressorMixin, X_train: pd.DataFrame, X_valid: pd.DataFrame, y_train: pd.DataFrame,
+                   y_valid: pd.DataFrame) -> Dict[str, Any]:
     pipeline = make_pipeline(StandardScaler(), model)
     start = time()
     pipeline.fit(X_train, y_train)  # scaling / normalization is done inside
     duration = time() - start
-    y_pred = pipeline.predict(X_test)
+    y_pred = pipeline.predict(X_valid)
     return {
         "pipeline": pipeline,
-        "r2": r2_score(y_test, y_pred),
-        "mse": mean_squared_error(y_test, y_pred),
-        "mae": mean_absolute_error(y_test, y_pred),
+        "r2": r2_score(y_valid, y_pred),
+        "mse": mean_squared_error(y_valid, y_pred),
+        "mae": mean_absolute_error(y_valid, y_pred),
         "y_pred": y_pred,
         "time": duration
     }
@@ -86,11 +79,11 @@ def plot_learning_curve(estimator: Pipeline, X: pd.DataFrame, y: pd.Series, mode
     return path
 
 
-def plot_predictions(results_sorted: List[Dict[str, Any]], y_test: pd.Series, metric_to_optimize: str, output_dir: str):
+def plot_predictions(results_sorted: List[Dict[str, Any]], y_valid: pd.Series, metric_to_optimize: str, output_dir: str):
     traces = []
     for res in results_sorted:
         traces.append(go.Scatter(
-            x=y_test,
+            x=y_valid,
             y=res['y_pred'],
             mode='markers',
             name=f"{res['name']} (R²={res['r2']:.2f})",
@@ -98,8 +91,8 @@ def plot_predictions(results_sorted: List[Dict[str, Any]], y_test: pd.Series, me
         ))
 
     traces.append(go.Scatter(
-        x=y_test,
-        y=y_test,
+        x=y_valid,
+        y=y_valid,
         mode='lines',
         name='Ideal (y = x)',
         line=dict(color='red', dash='dash')
@@ -164,10 +157,10 @@ def run_full_pipeline(metric_to_optimize: str = "mse") -> None:
         print(f"\n📌 Results for {name}:")
         seed_results[name] = []
         for i, seed in enumerate(SEEDS):
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=seed)
-            res = evaluate_model(model, X_train, X_test, y_train, y_test)
+            X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.1, random_state=seed)
+            res = evaluate_model(model, X_train, X_valid, y_train, y_valid)
             res["name"] = name
-            res["y_test"] = y_test
+            res["y_valid"] = y_valid
             seed_results[name].append(res)
             print(f"   Seed {seed} ▶ MSE: {res['mse']:.4f}, MAE: {res['mae']:.4f}, R²: {res['r2']:.4f}")
 
@@ -202,7 +195,7 @@ def run_full_pipeline(metric_to_optimize: str = "mse") -> None:
 
     print(f"💾 Model + metadata saved to: {OUTPUT_DIR}")
 
-    _ = plot_predictions([r["result"] for r in results_sorted], best_result['y_test'], metric_to_optimize, OUTPUT_DIR)
+    _ = plot_predictions([r["result"] for r in results_sorted], best_result['y_valid'], metric_to_optimize, OUTPUT_DIR)
     _ = plot_learning_curve(best_result['pipeline'], X, y, best_name, OUTPUT_DIR)
     _ = plot_feature_importance(best_result, feature_names, best_name, OUTPUT_DIR)
 
