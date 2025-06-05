@@ -1,6 +1,6 @@
 # 💀 Age of Death Predictor
 
-This project predicts the **age at death** for heart failure patients who **died during the study period**, using clinical features and multiple regression models (Linear Regression, Ridge, Lasso, ElasticNet, Decision Trees, Random Forest, Gradient Boosting, SVR, XGBoost, KNN). It includes data exploration, train (85%) / test (15%) splitting, model training, evaluation on validation data (10%), and prediction on unseen test data.
+This project predicts the **age at death** for heart failure patients who **died during the study period** (i.e., it does not predict whether or when a patient will die in the future, but only estimates the age at death for those already known to have died), using clinical features and multiple regression models (Linear Regression, Ridge, Lasso, ElasticNet, Decision Trees, Random Forest, Gradient Boosting, SVR, XGBoost, KNN). It includes data exploration, train (85%) / test (15%) splitting, model training, evaluation on validation data (10% of the train data set), and prediction on unseen test data.
 
 ---
 
