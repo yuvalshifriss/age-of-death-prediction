@@ -68,6 +68,7 @@ def main() -> None:
 
     file_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir, 'data', 'heart_failure_clinical_records.csv'))
     df = load_data(file_path, only_dead=True)
+    df = df.drop(columns=['DEATH_EVENT', 'time'])
 
     # Sidebar controls
     st.sidebar.header("🔧 Feature Distribution Options")

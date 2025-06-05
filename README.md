@@ -62,6 +62,7 @@ Trains multiple regression models to predict the **age of death** for patients w
 ### 📋 Key Steps
 
 - Filters only deceased patients (`DEATH_EVENT == 1`)
+- Scales input features (doesn't scale target values as the regression models used don’t require target normalization)
 - Trains multiple models:
   - Linear Regression, Ridge, Lasso, ElasticNet
   - Decision Trees, Random Forest, Gradient Boosting

@@ -17,16 +17,17 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import xgboost as xgb
 
+from common_utils import load_data
+
 # Config
 SEEDS = [0, 42, 77, 123, 999]
-DATA_PATH = os.path.abspath(os.path.join(os.getcwd(), os.pardir, 'data', 'heart_failure_clinical_records.csv'))
+DATA_PATH = os.path.abspath(os.path.join(os.getcwd(), os.pardir, 'data', 'train_val_data.csv'))
 OUTPUT_DIR = os.path.abspath(os.path.join(os.getcwd(), os.pardir, 'output'))
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
-def load_data():
-    df = pd.read_csv(DATA_PATH)
-    dead_df = df[df['DEATH_EVENT'] == 1]
+def load_and_split_data():
+    dead_df = load_data(DATA_PATH, True)
     X = dead_df.drop(columns=['DEATH_EVENT', 'age', 'time'])
     y = dead_df['age']
     return X, y
@@ -146,7 +147,7 @@ def plot_feature_importance(best_result, feature_names, best_name, output_dir):
 def run_full_pipeline(metric_to_optimize="mse"):
     assert metric_to_optimize in ["mae", "mse", "r2"]
     print("📥 Loading data...")
-    X, y = load_data()
+    X, y = load_and_split_data()
     feature_names = X.columns.tolist()
 
     print("🔧 Defining models...")
@@ -170,9 +171,11 @@ def run_full_pipeline(metric_to_optimize="mse"):
     for name, runs in seed_results.items():
         metric_vals = [r[metric_to_optimize] for r in runs]
         avg_metric = np.mean(metric_vals)
+        std_metric = np.std(metric_vals)
         summary.append({
             "name": name,
-            "metric_value": avg_metric,
+            "avg_metric": avg_metric,
+            "std_metric": std_metric,
             "result": runs[0]  # take first run's pipeline for saving
         })
 
