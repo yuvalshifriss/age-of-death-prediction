@@ -102,7 +102,7 @@ def main():
     results_df["True_Age"] = y_true
     results_df["Predicted_Age"] = y_pred
 
-    save_path = os.path.join(output_dir, "predicted_ages.csv")
+    save_path = os.path.join(output_dir, "test_data_predicted_ages.csv")
     results_df.to_csv(save_path, index=False)
     print(f"📄 Predictions saved to: {save_path}")
     visualize_predictions(results_df, output_dir)

@@ -110,7 +110,7 @@ def plot_predictions(results_sorted, y_test, metric_to_optimize, output_dir):
     ))
 
     fig.show()
-    plot_path = os.path.join(output_dir, 'predicted_vs_actual_all_models.html')
+    plot_path = os.path.join(output_dir, 'validation_data_predicted_vs_actual_all_models.html')
     fig.write_html(plot_path)
     return plot_path
 
