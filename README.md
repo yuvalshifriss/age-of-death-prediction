@@ -73,9 +73,10 @@ Trains multiple regression models to predict the **age of death** for patients w
 
 ### 📈 Output Artifacts
 
-- Learning curve plots
-- Prediction vs actual scatter plots
-- Feature importance visualizations (if available)
+- Learning curve plots (see **Overfitting** bellow)
+- Validation data prediction vs actual scatter plots
+![valid](https://github.com/user-attachments/assets/15b2a0c9-abb5-45be-8d76-b609a146a442)
+- Feature importance visualizations (if available, see **Overfitting** bellow)
 - `output/best_model.joblib` and `output/best_model_meta.json`
 
 ### ▶️ How to Run
@@ -113,14 +114,25 @@ This project includes several strategies to detect and reduce overfitting:
 - Models are trained and evaluated using several random seeds: `[0, 42, 77, 123, 999]`.
 - Results (MSE, MAE, R²) are aggregated across seeds.
 - Low variation between runs indicates stable model performance.
-
+```
+  📌 Results for Random Forest:
+   Seed 0 ▶ MSE: 23.5239, MAE: 1.4986, R²: 0.8638
+   Seed 42 ▶ MSE: 9.3703, MAE: 1.0943, R²: 0.9424
+   Seed 77 ▶ MSE: 9.5878, MAE: 0.9732, R²: 0.9452
+   Seed 123 ▶ MSE: 13.1486, MAE: 1.0241, R²: 0.9121
+   Seed 999 ▶ MSE: 14.2135, MAE: 1.2069, R²: 0.9182
+```
 ### 📉 SKlearn Learning Curve Plots
 - Learning curves compare training and validation errors across increasing dataset sizes.
-- In this project, validation error is typically ~15% higher than training error.
-- This gap suggests **moderate overfitting**, understandable given the small amount of samples ~1500, but within an acceptable range.
+![learning_curve](https://github.com/user-attachments/assets/7afcef73-7c4c-4e3d-a862-2e229d485ce0)
+- Model seems to be learning well: As training size increases, the validation MSE decreases.
+- No underfitting: Training error is low, which suggests the model can represent the data well.
+- Validation error plateaus: Adding more data helped up to a point (~600–800 samples), but gains diminish after that.
+- **Overfitting**: The training error is much lower than the validation error — a common trait of Random Forests. The model may be too tightly fitting the training data. But the gap is stable and not extreme.
 
 ### 📊 Feature Importance Visualization
 - Tree-based models (e.g. Random Forest, XGBoost) provide interpretable feature importances.
 - Helps identify:
   - Over-reliance on a few features
   - Potential for dimensionality reduction or regularization
+![importance](https://github.com/user-attachments/assets/3fd3dec8-cfd3-456f-a4f7-f4026a1ece6d)
