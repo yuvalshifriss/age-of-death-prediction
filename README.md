@@ -48,7 +48,7 @@ An interactive **Streamlit** web app for exploring the clinical data of deceased
 
 ### ▶️ How to Launch
 ```bash
-python src/train_and_test.py
+python src/run_data_exploration_app.py
 ```
 or
 ```bash
