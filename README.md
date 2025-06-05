@@ -1,6 +1,6 @@
 # 💀 Age of Death Predictor
 
-This project predicts the **age of death** for patients who experienced **heart failure**, using clinical features and various regression models. It includes data exploration, training, evaluation, and prediction capabilities with visualizations.
+This project predicts the **age at death** for heart failure patients who died during the study period, using clinical features and multiple regression models. It includes data exploration, model training, evaluation, and prediction — along with visualizations to highlight patterns associated with earlier or later mortality among the deceased patients.
 
 ---
 
@@ -76,7 +76,7 @@ streamlit run src/explore_data_app.py
 
 ## 3. `train_and_validate.py`
 
-Trains multiple regression models to predict the **age of death** for patients who experienced heart failure.
+Trains multiple regression models to predict the **age at death** for heart failure patients who **died during the study period**, based on their clinical characteristics. This model is limited to the observed deaths and is intended to explore patterns associated with earlier or later mortality among these patients.
 
 ### 📋 Key Steps
 
