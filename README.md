@@ -9,14 +9,22 @@ This project predicts the **age of death** for patients who experienced **heart 
 death-age-predictor/
 ├── data/
 │   └── heart_failure_clinical_records.csv
+│   └── train_val_data.csv
+│   └── test_data.csv
 ├── output/
 │   ├── best_model.joblib
 │   ├── best_model_meta.json
 │   └── *.html  (visualizations)
+│   └── *.csv  (test data predictions)
 ├── src/
-│   ├── train_and_test.py
-│   ├── predictor.py
-│   └── explore_data_app.py
+│   ├── common_utils.py
+│   ├── split_data_train_test.py
+│   ├── data_exploration_app.py
+│   ├── run_data_exploration_app.py
+│   ├── train_and_validate.py
+│   └── predictor.py
+├── README.md
+├── requirements.txt
 ```
 
 # 🧰 Requirements
