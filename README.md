@@ -76,7 +76,7 @@ streamlit run src/explore_data_app.py
 
 ## 3. `train_and_validate.py`
 
-Trains multiple regression models to predict the **age of death** for patients who died from heart failure.
+Trains multiple regression models to predict the **age of death** for patients who experienced heart failure.
 
 ### 📋 Key Steps
 
@@ -143,7 +143,7 @@ This project includes several strategies to detect and reduce overfitting:
 ### 📉 SKlearn Learning Curve Plots
 - Learning curves compare training and validation errors across increasing dataset sizes.
 ![learning_curve](https://github.com/user-attachments/assets/7afcef73-7c4c-4e3d-a862-2e229d485ce0)
-- Model seems to be learning well: As training size increases, the validation MSE decreases.
+- Here, the best model was random forest, it seems to be learning well: As training size increases, the validation MSE decreases.
 - No underfitting: Training error is low, which suggests the model can represent the data well.
 - Validation error plateaus: Adding more data helped up to a point (~600–800 samples), but gains diminish after that.
 - **Overfitting**: The training error is much lower than the validation error — a common trait of Random Forests. The model may be too tightly fitting the training data. But the gap is stable and not extreme.
