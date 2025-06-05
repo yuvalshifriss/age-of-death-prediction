@@ -114,7 +114,7 @@ This project includes several strategies to detect and reduce overfitting:
 - Results (MSE, MAE, R²) are aggregated across seeds.
 - Low variation between runs indicates stable model performance.
 
-### 📉 Learning Curve Plots
+### 📉 SKlearn Learning Curve Plots
 - Learning curves compare training and validation errors across increasing dataset sizes.
 - In this project, validation error is typically ~15% higher than training error.
 - This gap suggests **moderate overfitting**, understandable given the small amount of samples ~1500, but within an acceptable range.
