@@ -36,7 +36,17 @@ Given this, we assume that for patients with DEATH_EVENT = 1, the age column ref
 
 
 # 🚀 Scripts Overview
-## 1. `explore_data_app.py`
+## 1. `split_data_train_test.py`
+
+Splits the data to 15% / 85% test / train data and save to csv file. 
+
+### ▶️ How to Run
+
+```bash
+python src/split_data_train_test.py
+```
+
+## 2. `explore_data_app.py`
 
 An interactive **Streamlit** web app for exploring the clinical data of deceased heart failure patients.
 
@@ -56,7 +66,7 @@ streamlit run src/explore_data_app.py
 ```
 ![data_explorer](https://github.com/user-attachments/assets/84402dbb-5dc3-49ed-b2f3-2d88596e332a)
 
-## 2. `train_and_test.py`
+## 3. `train_and_validate.py`
 
 Trains multiple regression models to predict the **age of death** for patients who died from heart failure.
 
@@ -85,10 +95,10 @@ Trains multiple regression models to predict the **age of death** for patients w
 ### ▶️ How to Run
 
 ```bash
-python src/train_and_test.py
+python src/train_and_validate.py
 ```
 
-## 3. `predictor.py`
+## 4. `predictor.py`
 
 Uses the trained model to make predictions on **test data** that did not take part in the training stage
 
@@ -105,7 +115,6 @@ Uses the trained model to make predictions on **test data** that did not take pa
 ```bash
 python src/predictor.py
 ```
-
 
 # 🔍 Overfitting
 
