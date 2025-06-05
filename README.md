@@ -54,6 +54,7 @@ or
 ```bash
 streamlit run src/explore_data_app.py
 ```
+![data_explorer](https://github.com/user-attachments/assets/84402dbb-5dc3-49ed-b2f3-2d88596e332a)
 
 ## 2. `train_and_test.py`
 
