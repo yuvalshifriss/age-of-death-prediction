@@ -1,7 +1,7 @@
 {
   "model_name": "Random Forest",
   "metric": "mse",
-  "score": 18.072699692652343,
+  "score": 13.968846634972522,
   "features": [
     "anaemia",
     "creatinine_phosphokinase",

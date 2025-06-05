@@ -64,7 +64,7 @@ def evaluate_model(model, X_train, X_test, y_train, y_test):
     }
 
 
-def plot_learning_curve(estimator, X, y, model_name):
+def plot_learning_curve(estimator, X, y, model_name, output_dir):
     train_sizes, train_scores, test_scores = learning_curve(
         estimator, X, y, cv=5, scoring='neg_mean_squared_error',
         train_sizes=np.linspace(0.1, 1.0, 10)
@@ -75,9 +75,10 @@ def plot_learning_curve(estimator, X, y, model_name):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=train_sizes, y=train_scores_mean, mode='lines+markers', name='Training MSE'))
     fig.add_trace(go.Scatter(x=train_sizes, y=test_scores_mean, mode='lines+markers', name='Validation MSE'))
-    fig.update_layout(title=f'Learning Curve – {model_name}',
+    fig.update_layout(title=f'SKlearn Learning Curve – {model_name}',
                       xaxis_title='Training examples', yaxis_title='MSE')
-    path = os.path.join(OUTPUT_DIR, f'learning_curve_{model_name.replace(" ", "_")}.html')
+    fig.show()
+    path = os.path.join(output_dir, f'sklearn_learning_curve_{model_name.replace(" ", "_")}.html')
     fig.write_html(path)
     return path
 
@@ -102,7 +103,7 @@ def plot_predictions(results_sorted, y_test, metric_to_optimize, output_dir):
     ))
 
     fig = go.Figure(data=traces, layout=go.Layout(
-        title=f'Predicted vs Actual (All Models) – Sorted by {metric_to_optimize.upper()}',
+        title=f'Validation Data Predicted vs Actual (All Models) – Sorted by {metric_to_optimize.upper()}',
         xaxis=dict(title='Actual Age'),
         yaxis=dict(title='Predicted Age'),
         width=900, height=700
@@ -172,32 +173,33 @@ def run_full_pipeline(metric_to_optimize="mse"):
         metric_vals = [r[metric_to_optimize] for r in runs]
         avg_metric = np.mean(metric_vals)
         std_metric = np.std(metric_vals)
+        best_run = min(runs, key=lambda r: r[metric_to_optimize])
         summary.append({
             "name": name,
             "avg_metric": avg_metric,
             "std_metric": std_metric,
-            "result": runs[0]  # take first run's pipeline for saving
+            "result": best_run
         })
 
-    results_sorted = sorted(summary, key=lambda x: x["metric_value"])
+    results_sorted = sorted(summary, key=lambda x: x["avg_metric"])
     best_result = results_sorted[0]["result"]
     best_name = results_sorted[0]["name"]
 
-    print(f"\n🎯 Best model by {metric_to_optimize.upper()}: {best_name} ({results_sorted[0]['metric_value']:.4f} {metric_to_optimize.upper()})")
+    print(f"\n🎯 Best model by {metric_to_optimize.upper()}: {best_name} ({results_sorted[0]['avg_metric']:.4f} {metric_to_optimize.upper()})")
 
     joblib.dump(best_result['pipeline'], os.path.join(OUTPUT_DIR, 'best_model.joblib'))
     with open(os.path.join(OUTPUT_DIR, 'best_model_meta.json'), 'w') as f:
         json.dump({
             "model_name": best_name,
             "metric": metric_to_optimize,
-            "score": results_sorted[0]["metric_value"],
+            "score": results_sorted[0]["avg_metric"],
             "features": feature_names
         }, f, indent=2)
 
     print(f"💾 Model + metadata saved to: {OUTPUT_DIR}")
 
-    _ = plot_learning_curve(best_result['pipeline'], X, y, best_name)
     _ = plot_predictions([r["result"] for r in results_sorted], best_result['y_test'], metric_to_optimize, OUTPUT_DIR)
+    _ = plot_learning_curve(best_result['pipeline'], X, y, best_name, OUTPUT_DIR)
     _ = plot_feature_importance(best_result, feature_names, best_name, OUTPUT_DIR)
 
 
