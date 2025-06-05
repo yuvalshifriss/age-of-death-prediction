@@ -1,6 +1,6 @@
 # 💀 Age of Death Predictor
 
-This project predicts the **age at death** for heart failure patients who **died during the study period** (i.e., it does not predict whether or when a patient will die in the future, but only estimates the age at death for those already known to have died), using clinical features and multiple regression models (Linear Regression, Ridge, Lasso, ElasticNet, Decision Trees, Random Forest, Gradient Boosting, SVR, XGBoost, KNN). It includes data exploration, train (85%) / test (15%) splitting, model training, evaluation on validation data (10% of the train data set), and prediction on unseen test data.
+This project predicts the **age at death** for heart failure patients who **died during the study period** (i.e., it does not predict **whether** a patient will die or when death might occur, but rather estimates the age at death for those already known to have died), using clinical features and multiple regression models (Linear Regression, Ridge, Lasso, ElasticNet, Decision Trees, Random Forest, Gradient Boosting, SVR, XGBoost, KNN). It includes data exploration, train (85%) / test (15%) splitting, model training, evaluation on validation data (10% of the train data set), and prediction on unseen test data.
 
 ---
 
@@ -37,12 +37,12 @@ pip install -r requirements.txt
 
 # 📊 Data Source
 data/heart_failure_clinical_records.csv downloaded from: [Kaggle – Heart Failure Clinical Records](https://www.kaggle.com/datasets/aadarshvelu/heart-failure-prediction-clinical-records)
-The dataset contains clinical data from heart failure patients, with the time column indicating the duration of follow-up in days. Patients with DEATH_EVENT = 1 are those who died during this follow-up period, and for them, the age column is interpreted as their age at death. The models are trained exclusively on this subset of deceased patients.
+The dataset contains clinical data from heart failure patients, with the time column indicating the duration of follow-up in days. Patients with ```DEATH_EVENT``` = 1 are those who died during this follow-up period, and for them, the ```age``` column is interpreted as their age at death. The models are trained exclusively on this subset of deceased patients.
 
 # 🚀 Scripts Overview
 ## 1. `split_data_train_test.py`
 
-Splits the data to test (15%) and train (85%) data and save to csv file. 
+Splits the data into training (85%) and test (15%) sets, and saves them as CSV files.
 
 ### ▶️ How to Run
 
@@ -85,12 +85,12 @@ Trains multiple regression models to predict the **age at death** for heart fail
 - Evaluates each using multiple random seeds
 - Ranks models based on a user-defined metric: `mse`, `mae`, or `r2`
 - Saves the **best model** and its training metadata
-- Predicts the **age of death** for all patients in the validation data.
+- Predicts the **age at death** for patients in the **test dataset**, which consists only of individuals who died during the study period.
 - Generates an **interactive Plotly chart** with the predicted age and the actual age of death
 
 ### 📈 Output Artifacts
 
-- Learning curve plots (see **Overfitting** bellow)
+- Learning curve plots (see **Overfitting** below)
 - Validation data prediction vs actual scatter plots
 ![valid](https://github.com/user-attachments/assets/15b2a0c9-abb5-45be-8d76-b609a146a442)
 - Feature importance visualizations (if available, see **Overfitting** bellow)
