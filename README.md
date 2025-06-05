@@ -36,8 +36,7 @@ pip install -r requirements.txt
 ```
 
 # 📊 Data Source
-Input file: data/heart_failure_clinical_records.csv
-Download from: [Kaggle – Heart Failure Clinical Records](https://www.kaggle.com/datasets/aadarshvelu/heart-failure-prediction-clinical-records)
+data/heart_failure_clinical_records.csv downloaded from: [Kaggle – Heart Failure Clinical Records](https://www.kaggle.com/datasets/aadarshvelu/heart-failure-prediction-clinical-records)
 The dataset contains clinical data from heart failure patients, with the time column indicating the duration of follow-up in days. Patients with DEATH_EVENT = 1 are those who died during this follow-up period, and for them, the age column is interpreted as their age at death. The models are trained exclusively on this subset of deceased patients.
 
 # 🚀 Scripts Overview
