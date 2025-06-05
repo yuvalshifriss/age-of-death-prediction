@@ -97,6 +97,7 @@ Uses the trained model to make predictions on **test data** that did not take pa
 - Predicts the **age of death** for all patients in the **test data** dataset.
 - Saves the **predictions to CSV**.
 - Generates an **interactive Plotly chart** with the predicted age and the actual age of death
+![test_prediction](https://github.com/user-attachments/assets/9229dae0-e1f2-4ed0-af92-4f2cb10ef840)
 
 ### ▶️ Run it with:
 
