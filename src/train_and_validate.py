@@ -1,12 +1,15 @@
 import os
 import json
 import joblib
+import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
-
 from time import time
+from typing import Tuple, Dict, List, Optional, Any
+
+from sklearn.base import RegressorMixin
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.model_selection import train_test_split, learning_curve
-from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
 from sklearn.tree import DecisionTreeRegressor
@@ -25,14 +28,14 @@ OUTPUT_DIR = os.path.abspath(os.path.join(os.getcwd(), os.pardir, 'output'))
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
-def load_and_split_data():
+def load_and_split_data() -> Tuple[pd.DataFrame, pd.Series]:
     dead_df = load_data(DATA_PATH, True)
     X = dead_df.drop(columns=['DEATH_EVENT', 'age', 'time'])
     y = dead_df['age']
     return X, y
 
 
-def define_models():
+def define_models() -> Dict[str, RegressorMixin]:
     return {
         "Linear Regression": LinearRegression(),
         "Ridge Regression": Ridge(alpha=1.0),
@@ -47,7 +50,8 @@ def define_models():
     }
 
 
-def evaluate_model(model, X_train, X_test, y_train, y_test):
+def evaluate_model(model: RegressorMixin, X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.DataFrame,
+                   y_test: pd.DataFrame) -> Dict[str, Any]:
     pipeline = make_pipeline(StandardScaler(), model)
     start = time()
     pipeline.fit(X_train, y_train)  # scaling / normalization is done inside
@@ -63,7 +67,7 @@ def evaluate_model(model, X_train, X_test, y_train, y_test):
     }
 
 
-def plot_learning_curve(estimator, X, y, model_name, output_dir):
+def plot_learning_curve(estimator: Pipeline, X: pd.DataFrame, y: pd.Series, model_name: str, output_dir: str):
     train_sizes, train_scores, test_scores = learning_curve(
         estimator, X, y, cv=5, scoring='neg_mean_squared_error',
         train_sizes=np.linspace(0.1, 1.0, 10)
@@ -82,7 +86,7 @@ def plot_learning_curve(estimator, X, y, model_name, output_dir):
     return path
 
 
-def plot_predictions(results_sorted, y_test, metric_to_optimize, output_dir):
+def plot_predictions(results_sorted: List[Dict[str, Any]], y_test: pd.Series, metric_to_optimize: str, output_dir: str):
     traces = []
     for res in results_sorted:
         traces.append(go.Scatter(
@@ -114,7 +118,8 @@ def plot_predictions(results_sorted, y_test, metric_to_optimize, output_dir):
     return plot_path
 
 
-def plot_feature_importance(best_result, feature_names, best_name, output_dir):
+def plot_feature_importance(best_result: Dict[str, Any], feature_names: List[str], best_name: str, output_dir: str) \
+        -> Optional[str]:
     model_name = best_result['name']
     model = best_result['pipeline'].named_steps[list(best_result['pipeline'].named_steps)[-1]]
     if hasattr(model, 'feature_importances_'):
@@ -144,7 +149,7 @@ def plot_feature_importance(best_result, feature_names, best_name, output_dir):
     return None
 
 
-def run_full_pipeline(metric_to_optimize="mse"):
+def run_full_pipeline(metric_to_optimize: str = "mse") -> None:
     assert metric_to_optimize in ["mae", "mse", "r2"]
     print("📥 Loading data...")
     X, y = load_and_split_data()

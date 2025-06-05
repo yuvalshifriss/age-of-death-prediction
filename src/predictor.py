@@ -4,11 +4,17 @@ import joblib
 import json
 import plotly.graph_objs as go
 from time import time
+from scipy.stats import ks_2samp
+from typing import Tuple, Dict, Any, List, Optional, Union
+from sklearn.base import RegressorMixin
+from pandas import DataFrame, Series
 
 from common_utils import load_data
 
+P_VALUE_TH = 0.05
 
-def load_data_for_prediction():
+
+def load_data_for_prediction() -> Tuple[pd.DataFrame, pd.Series]:
     file_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir, 'data', 'test_data.csv'))
     dead_df = load_data(file_path, True)
     true_age = dead_df['age'].where(dead_df['DEATH_EVENT'] == 1, other=None)
@@ -16,7 +22,7 @@ def load_data_for_prediction():
     return X.reset_index(drop=True), true_age.reset_index(drop=True)
 
 
-def load_model_and_metadata(output_dir):
+def load_model_and_metadata(output_dir: str) -> Tuple[RegressorMixin, Dict[str, Any]]:
     model_path = os.path.join(output_dir, 'best_model.joblib')
     meta_path = os.path.join(output_dir, 'best_model_meta.json')
 
@@ -30,7 +36,7 @@ def load_model_and_metadata(output_dir):
     return model, metadata
 
 
-def predict(model, X, feature_list):
+def predict(model: RegressorMixin, X: pd.DataFrame, feature_list: Optional[List[str]]) -> pd.Series:
     if feature_list:
         missing = set(feature_list) - set(X.columns)
         if missing:
@@ -41,7 +47,6 @@ def predict(model, X, feature_list):
 
 def visualize_predictions(results_df: pd.DataFrame, output_dir: str) -> None:
     results_df = results_df.reset_index().rename(columns={"index": "Patient_Index"})
-    # One scatter trace: True Age on x, Predicted Age on y
     trace = go.Scatter(
         x=results_df["True_Age"],
         y=results_df["Predicted_Age"],
@@ -55,7 +60,6 @@ def visualize_predictions(results_df: pd.DataFrame, output_dir: str) -> None:
             "Predicted Age: %{customdata[1]}<extra></extra>"
         )
     )
-    # Ideal line (y = x)
     min_age = results_df[["True_Age", "Predicted_Age"]].min().min()
     max_age = results_df[["True_Age", "Predicted_Age"]].max().max()
     ideal_line = go.Scatter(
@@ -79,7 +83,15 @@ def visualize_predictions(results_df: pd.DataFrame, output_dir: str) -> None:
     print(f"📊 Plot saved to: {plot_path}")
 
 
-def main():
+def compare_distributions(y_true: Union[pd.Series, List[float]], y_pred: Union[pd.Series, List[float]]) -> None:
+    statistic, p_value = ks_2samp(y_true, y_pred)
+    print(f"KS Statistic: {statistic}, p-value: {p_value}")
+    if p_value > P_VALUE_TH:
+        print("There’s no statistically significant difference between the distributions "
+              "of the predictions and actual target values (ages).")
+
+
+def main() -> None:
     output_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir, 'output'))
     os.makedirs(output_dir, exist_ok=True)
 
@@ -106,6 +118,7 @@ def main():
     results_df.to_csv(save_path, index=False)
     print(f"📄 Predictions saved to: {save_path}")
     visualize_predictions(results_df, output_dir)
+    compare_distributions(y_true, y_pred)
 
 
 if __name__ == '__main__':
