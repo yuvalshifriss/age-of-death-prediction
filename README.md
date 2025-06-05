@@ -1,6 +1,6 @@
 # 💀 Age of Death Predictor
 
-This project predicts the **age at death** for heart failure patients who died during the study period, using clinical features and multiple regression models. It includes data exploration, model training, evaluation, and prediction — along with visualizations to highlight patterns associated with earlier or later mortality among the deceased patients.
+This project predicts the **age at death** for heart failure patients who **died during the study period**, using clinical features and multiple regression models (Linear Regression, Ridge, Lasso, ElasticNet, Decision Trees, Random Forest, Gradient Boosting, SVR, XGBoost, KNN). It includes data exploration, train (85%) / test (15%) splitting, model training, evaluation on validation data (10%), and prediction on unseen test data.
 
 ---
 
@@ -38,15 +38,12 @@ pip install -r requirements.txt
 # 📊 Data Source
 Input file: data/heart_failure_clinical_records.csv
 Download from: [Kaggle – Heart Failure Clinical Records](https://www.kaggle.com/datasets/aadarshvelu/heart-failure-prediction-clinical-records)
-It contains clinical features of patients, with DEATH_EVENT = 1 indicating
-the patient died during follow-up and age at death. The time column represents the duration (in days) until the follow-up, with a maximum value of 285 days.
-Given this, we assume that for patients with DEATH_EVENT = 1, the age column reflects their age at death. There are about 1500 such patients, on which the different models train, which is clearly not a lot.
-
+The dataset contains clinical data from heart failure patients, with the time column indicating the duration of follow-up in days. Patients with DEATH_EVENT = 1 are those who died during this follow-up period, and for them, the age column is interpreted as their age at death. The models are trained exclusively on this subset of deceased patients.
 
 # 🚀 Scripts Overview
 ## 1. `split_data_train_test.py`
 
-Splits the data to 15% / 85% test / train data and save to csv file. 
+Splits the data to test (15%) and train (85%) data and save to csv file. 
 
 ### ▶️ How to Run
 
