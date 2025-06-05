@@ -70,6 +70,8 @@ Trains multiple regression models to predict the **age of death** for patients w
 - Evaluates each using multiple random seeds
 - Ranks models based on a user-defined metric: `mse`, `mae`, or `r2`
 - Saves the **best model** and its training metadata
+- Predicts the **age of death** for all patients in the validation data.
+- Generates an **interactive Plotly chart** with the predicted age and the actual age of death
 
 ### 📈 Output Artifacts
 
@@ -87,17 +89,14 @@ python src/train_and_test.py
 
 ## 3. `predictor.py`
 
-Uses the trained model to make predictions on **all patients**, including 
-those who survived (for the time being 😈) 
+Uses the trained model to make predictions on **test data** that did not take part in the training stage
 
 ### 🔍 What it does:
 - Loads the **trained model** and its **training metadata** (including the features used).
 - Applies the **same preprocessing** used during training.
-- Predicts the **age of death** for all patients in the dataset.
+- Predicts the **age of death** for all patients in the **test data** dataset.
 - Saves the **predictions to CSV**.
-- Generates an **interactive Plotly chart**:
-  - 🔴 **Red**: Predicted age of death (all patients)
-  - 🟢 **Green**: True age (for patients who died)
+- Generates an **interactive Plotly chart** with the predicted age and the actual age of death
 
 ### ▶️ Run it with:
 
