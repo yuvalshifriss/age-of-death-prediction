@@ -128,7 +128,7 @@ This project includes multiple strategies to evaluate model performance and stab
 - Each model is evaluated using repeated k-fold splits (e.g. 5 folds × 3 repeats = 15 folds total)
 - Each fold provides a separate estimate of performance (MSE, MAE, R²)
 - This reduces bias from a single train/test split and better captures variance in performance
-
+The best model using MSE evaluation matric is Random Forest; here are the k-fold results for it:
 ```
 📌 Results for Random Forest:
  Fold  1 ▶ MSE: 9.1715, MAE: 0.9503, R²: 0.9444
@@ -137,6 +137,7 @@ This project includes multiple strategies to evaluate model performance and stab
  ...
  Fold 15 ▶ MSE: 21.2127, MAE: 1.5120, R²: 0.8781
 ```
+Model performance varies across cross-validation folds due to data variability. This reflects how the model may perform differently depending on the specific training/validation split. Variability can arise from small sample size, outliers, or feature-target relationships that are not consistent across subsets; it can sometimes be reduced through feature engineering, robust preprocessing, or model regularization.
 
 ### 📉 SKlearn Learning Curve Plots
 - Learning curves compare training and validation errors across increasing dataset sizes.
