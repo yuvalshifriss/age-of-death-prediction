@@ -92,7 +92,7 @@ Trains multiple regression models to predict the **age at death** for heart fail
 
 - Learning curve plots (see **Discussion** below)
 - Validation data prediction vs actual scatter plots
-![valid](https://github.com/user-attachments/assets/15b2a0c9-abb5-45be-8d76-b609a146a442)
+![valid](https://github.com/user-attachments/assets/c878b27a-95af-4097-b0f2-bdb09ad113b5)
 - Feature importance visualizations (if available, see **Discussion** bellow)
 - `output/best_model.joblib` and `output/best_model_meta.json`
 
@@ -112,7 +112,7 @@ Uses the trained model to make predictions on **test data** that did not take pa
 - Predicts the **age of death** for all patients in the **test data** dataset.
 - Saves the **predictions to CSV**.
 - Generates an **interactive Plotly chart** with the predicted age and the actual age of death
-![test_prediction](https://github.com/user-attachments/assets/9229dae0-e1f2-4ed0-af92-4f2cb10ef840)
+![test_prediction](https://github.com/user-attachments/assets/27ad1133-7aa1-4bb8-886b-1831175daa68)
 
 ### ▶️ Run it with:
 
@@ -141,7 +141,7 @@ Model performance varies across cross-validation folds due to data variability. 
 
 ### 📉 SKlearn Learning Curve Plots
 - Learning curves compare training and validation errors across increasing dataset sizes.
-![learning_curve](https://github.com/user-attachments/assets/7afcef73-7c4c-4e3d-a862-2e229d485ce0)
+![learning_curve](https://github.com/user-attachments/assets/e1bb36d1-9237-4b4f-bc63-e217323f8ce4)
 - Here, the best model was random forest, it seems to be learning well: As training size increases, the validation MSE decreases.
 - No underfitting: Training error is low, which suggests the model can represent the data well.
 - Validation error plateaus: Adding more data helped up to a point (~600–800 samples), but gains diminish after that.
@@ -152,4 +152,5 @@ Model performance varies across cross-validation folds due to data variability. 
 - Helps identify:
   - Over-reliance on a few features
   - Potential for dimensionality reduction or regularization
-![importance](https://github.com/user-attachments/assets/3fd3dec8-cfd3-456f-a4f7-f4026a1ece6d)
+![importance](https://github.com/user-attachments/assets/b1857c29-22ab-4342-a42e-f2ef4b54b2f8)
+
