@@ -1,6 +1,6 @@
 # 💀 Age of Death Predictor
 
-This project predicts the **age at death** for heart failure patients who **died during the study period** (i.e., it does not predict **whether** a patient will die or when death might occur, but rather estimates the age at death for those already known to have died), using clinical features (such as ```smoking``` and ```serum_creatinine```, some continuous and others binary) and multiple regression models (Random Forest, XGBoost,  ElasticNet). It includes data exploration, train (85%) / test (15%) splitting, model training, evaluation on validation data (10% of the train data set), and prediction on unseen test data.
+This project predicts the **age at death** for heart failure patients who **died during the study period** (i.e., it does not predict **whether** a patient will die or when death might occur, but rather estimates the age at death for those already known to have died), using clinical features (such as ```smoking``` and ```serum_creatinine```, some continuous and others binary) and multiple regression models (Random Forest, XGBoost,  ElasticNet). It includes data exploration, train (85%) / test (15%) splitting, model training, model training, evaluation via cross-validation, and prediction on unseen test data.
 
 ---
 
@@ -82,7 +82,7 @@ Trains multiple regression models to predict the **age at death** for heart fail
   - Linear Regression, Ridge, Lasso, ElasticNet
   - Decision Trees, Random Forest, Gradient Boosting
   - SVR, XGBoost, KNN
-- Evaluates each using multiple random seeds
+- Evaluates each using Repeated K-Fold Cross-Validation
 - Ranks models based on a user-defined metric: `mse`, `mae`, or `r2`
 - Saves the **best model** and its training metadata
 - Predicts the **age at death** for patients in the **test dataset**, which consists only of individuals who died during the study period.
@@ -120,22 +120,24 @@ Uses the trained model to make predictions on **test data** that did not take pa
 python src/predictor.py
 ```
 
-# 🔍 Overfitting
+# 🔍 Discussion
 
-This project includes several strategies to detect and reduce overfitting:
+This project includes multiple strategies to evaluate model performance and stability:
 
-### ✅ Multiple Random Seeds
-- Models are trained and evaluated using several random seeds: `[0, 42, 77, 123, 999]`.
-- Results (MSE, MAE, R²) are aggregated across seeds.
-- Low variation between runs indicates stable model performance.
+### ✅ Repeated K-Fold Cross-Validation
+- Each model is evaluated using repeated k-fold splits (e.g. 5 folds × 3 repeats = 15 folds total)
+- Each fold provides a separate estimate of performance (MSE, MAE, R²)
+- This reduces bias from a single train/test split and better captures variance in performance
+
 ```
-  📌 Results for Random Forest:
-   Seed 0 ▶ MSE: 23.5239, MAE: 1.4986, R²: 0.8638
-   Seed 42 ▶ MSE: 9.3703, MAE: 1.0943, R²: 0.9424
-   Seed 77 ▶ MSE: 9.5878, MAE: 0.9732, R²: 0.9452
-   Seed 123 ▶ MSE: 13.1486, MAE: 1.0241, R²: 0.9121
-   Seed 999 ▶ MSE: 14.2135, MAE: 1.2069, R²: 0.9182
+📌 Results for Random Forest:
+ Fold  1 ▶ MSE: 9.1715, MAE: 0.9503, R²: 0.9444
+ Fold  2 ▶ MSE: 30.5263, MAE: 1.8680, R²: 0.8150
+ Fold  3 ▶ MSE: 16.0632, MAE: 1.3539, R²: 0.9172
+ ...
+ Fold 15 ▶ MSE: 21.2127, MAE: 1.5120, R²: 0.8781
 ```
+
 ### 📉 SKlearn Learning Curve Plots
 - Learning curves compare training and validation errors across increasing dataset sizes.
 ![learning_curve](https://github.com/user-attachments/assets/7afcef73-7c4c-4e3d-a862-2e229d485ce0)
