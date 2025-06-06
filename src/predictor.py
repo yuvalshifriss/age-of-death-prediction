@@ -7,7 +7,6 @@ from time import time
 from scipy.stats import ks_2samp
 from typing import Tuple, Dict, Any, List, Optional, Union
 from sklearn.base import RegressorMixin
-from pandas import DataFrame, Series
 
 from common_utils import load_data
 
