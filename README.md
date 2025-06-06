@@ -1,6 +1,6 @@
 # 💀 Age of Death Predictor
 
-This project predicts the **age at death** for heart failure patients who **died during the study period** (i.e., it does not predict **whether** a patient will die or when death might occur, but rather estimates the age at death for those already known to have died), using clinical features (such as ```smoking``` and ```serum_creatinine```, some continuous and others binary) and multiple regression models (Random Forest, XGBoost,  ElasticNet). It includes data exploration, train (85%) / test (15%) splitting, model training, model training, evaluation via cross-validation, and prediction on unseen test data.
+This project predicts the **age at death** for heart failure patients who **died during the study period** (i.e., it does not predict **whether** a patient will die or when death might occur, but rather estimates the age at death for those already known to have died), using clinical features (such as ```smoking``` and ```serum_creatinine```, some continuous and others binary) and multiple regression models (Random Forest, XGBoost,  ElasticNet). It includes data exploration, train (85%) / test (15%) splitting, model training, evaluation via cross-validation, and prediction on unseen test data.
 
 ---
 
@@ -79,21 +79,21 @@ Trains multiple regression models to predict the **age at death** for heart fail
 - Filters only deceased patients (`DEATH_EVENT == 1`)
 - Scales input features (doesn't scale target values as the regression models used don’t require target normalization)
 - Trains multiple models:
-  - Linear Regression, Ridge, Lasso, ElasticNet
-  - Decision Trees, Random Forest, Gradient Boosting
-  - SVR, XGBoost, KNN
+  - Random Forest
+  - XGBoost
+  - ElasticNet
 - Evaluates each using Repeated K-Fold Cross-Validation
 - Ranks models based on a user-defined metric: `mse`, `mae`, or `r2`
 - Saves the **best model** and its training metadata
-- Predicts the **age at death** for patients in the **test dataset**, which consists only of individuals who died during the study period.
+- Predicts the **age at death** for patients in the **validation dataset**, which consists only of individuals who died during the study period.
 - Generates an **interactive Plotly chart** with the predicted age and the actual age of death
 
 ### 📈 Output Artifacts
 
-- Learning curve plots (see **Overfitting** below)
+- Learning curve plots (see **Discussion** below)
 - Validation data prediction vs actual scatter plots
 ![valid](https://github.com/user-attachments/assets/15b2a0c9-abb5-45be-8d76-b609a146a442)
-- Feature importance visualizations (if available, see **Overfitting** bellow)
+- Feature importance visualizations (if available, see **Discussion** bellow)
 - `output/best_model.joblib` and `output/best_model_meta.json`
 
 ### ▶️ How to Run
