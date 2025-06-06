@@ -7,6 +7,7 @@ from time import time
 from scipy.stats import ks_2samp
 from typing import Tuple, Dict, Any, List, Optional, Union
 from sklearn.base import RegressorMixin
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 from common_utils import load_data
 
@@ -46,9 +47,18 @@ def predict(model: RegressorMixin, X: pd.DataFrame, feature_list: Optional[List[
 
 def visualize_predictions(results_df: pd.DataFrame, output_dir: str) -> None:
     results_df = results_df.reset_index().rename(columns={"index": "Patient_Index"})
+
+    # Compute metrics
+    y_true = results_df["True_Age"]
+    y_pred = results_df["Predicted_Age"]
+    mae = mean_absolute_error(y_true, y_pred)
+    mse = mean_squared_error(y_true, y_pred)
+    r2 = r2_score(y_true, y_pred)
+
+    # One scatter trace: True Age on x, Predicted Age on y
     trace = go.Scatter(
-        x=results_df["True_Age"],
-        y=results_df["Predicted_Age"],
+        x=y_true,
+        y=y_pred,
         mode="markers",
         marker=dict(color="blue"),
         name="Prediction",
@@ -59,8 +69,9 @@ def visualize_predictions(results_df: pd.DataFrame, output_dir: str) -> None:
             "Predicted Age: %{customdata[1]}<extra></extra>"
         )
     )
-    min_age = results_df[["True_Age", "Predicted_Age"]].min().min()
-    max_age = results_df[["True_Age", "Predicted_Age"]].max().max()
+
+    min_age = min(y_true.min(), y_pred.min())
+    max_age = max(y_true.max(), y_pred.max())
     ideal_line = go.Scatter(
         x=[min_age, max_age],
         y=[min_age, max_age],
@@ -68,14 +79,18 @@ def visualize_predictions(results_df: pd.DataFrame, output_dir: str) -> None:
         line=dict(color="red", dash="dash"),
         name="Ideal (y = x)"
     )
+
+    # Add metrics to the title
     fig = go.Figure([trace, ideal_line])
     fig.update_layout(
-        title="Test Data Predicted vs Actual Age of Death",
+        title=f"Test Data Predicted vs Actual Age of Death<br>"
+              f"MAE: {mae:.3f}, MSE: {mse:.3f}, R²: {r2:.3f}",
         xaxis_title="True Age",
         yaxis_title="Predicted Age",
         width=900,
         height=600
     )
+
     fig.show()
     plot_path = os.path.join(output_dir, "test_data_predicted_vs_true_by_index.html")
     fig.write_html(str(plot_path))

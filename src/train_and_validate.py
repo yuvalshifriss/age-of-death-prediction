@@ -11,11 +11,8 @@ from sklearn.base import RegressorMixin
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.model_selection import train_test_split, learning_curve
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.svm import SVR
-from sklearn.neighbors import KNeighborsRegressor
+from sklearn.linear_model import ElasticNet
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import xgboost as xgb
 
