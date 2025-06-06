@@ -13,7 +13,7 @@ def main():
     dead_df = load_data(DATA_PATH, True)
 
     # Split into training/validation and test
-    train_val_df, test_df = train_test_split(dead_df, test_size=0.15, random_state=42)
+    train_val_df, test_df = train_test_split(dead_df, test_size=0.15)
 
     train_val_df.to_csv(TRAIN_VAL_PATH, index=False)
     test_df.to_csv(TEST_PATH, index=False)

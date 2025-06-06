@@ -103,6 +103,9 @@ def compare_distributions(y_true: Union[pd.Series, List[float]], y_pred: Union[p
     if p_value > P_VALUE_TH:
         print("There’s no statistically significant difference between the distributions "
               "of the predictions and actual target values (ages).")
+    else:
+        print("The predicted age-at-death distribution differs significantly from the true one, suggesting the model "
+              "may be biased in some age ranges (e.g., underestimating younger ages at death or overestimating older ones).")
 
 
 def main() -> None:
